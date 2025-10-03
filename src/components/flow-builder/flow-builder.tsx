@@ -1,13 +1,17 @@
 import { useState, useCallback } from 'react';
-import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, type NodeChange, type EdgeChange } from '@xyflow/react';
+import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, type NodeChange, type EdgeChange, type Connection } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { NODE_TYPES } from './node';
  
 const initialNodes = [
-  { id: 'n1', type: "textNode", position: { x: 0, y: 0 }, data: { text: 'Node 1', type: 'whatsapp', to: [] } },
+  { id: 'n1', type: "textNode", position: { x: 0, y: 0 }, data: { text: 'Node 1', type: 'whatsapp', to: ['n2'] } },
   { id: 'n2', type: "textNode", position: { x: 400, y: 0 }, data: { text: 'Node 2', type: 'whatsapp', to: [] } },
 ];
-const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
+const initialEdges = initialNodes.flatMap((node) =>
+  node.data.to.map((targetId) => ({
+    id: `e${node.id}-${targetId}`, source: node.id, target: targetId, data: { from: node.id, to: targetId },
+  }))
+);
  
 export  function FlowBuilder() {
   const [nodes, setNodes] = useState<typeof initialNodes>(initialNodes);
@@ -22,7 +26,7 @@ export  function FlowBuilder() {
     [],
   );
   const onConnect = useCallback(
-    (params: Parameters<typeof addEdge>[0]) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+    (params: Connection) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
     [],
   );
  

@@ -10,12 +10,12 @@ function App() {
         </button>
       </header>
 
-      <div className="grid grid-cols-5 h-full">
-        <section className="col-span-4 h-full">
+      <div className="grid grid-cols-[1fr_350px] h-full">
+        <section className="col-span-1 h-full">
           <FlowBuilder />
         </section>
 
-        <section className="h-full col-span-1 bg-gray-700">
+        <section className="h-full bg-gray-700">
           {/* Node panel */}
         </section>
       </div>
