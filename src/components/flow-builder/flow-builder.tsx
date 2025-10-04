@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react';
-import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, type NodeChange, type EdgeChange, type Connection } from '@xyflow/react';
+import { useState, useCallback, useRef, type DragEvent } from 'react';
+import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, type NodeChange, type EdgeChange, type Connection, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { NODE_TYPES } from './node';
+import { useDnD } from '@/contexts/dnd-context';
  
 const initialNodes = [
   { id: 'n1', type: "textNode", position: { x: 0, y: 0 }, data: { text: 'Node 1', type: 'whatsapp', to: ['n2'] } },
@@ -14,6 +15,7 @@ const initialEdges = initialNodes.flatMap((node) =>
 );
  
 export  function FlowBuilder() {
+  const reactFlow = useReactFlow();
   const [nodes, setNodes] = useState<typeof initialNodes>(initialNodes);
   const [edges, setEdges] = useState<typeof initialEdges>(initialEdges);
 
@@ -29,16 +31,55 @@ export  function FlowBuilder() {
     (params: Connection) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
     [],
   );
+   const reactFlowWrapper = useRef(null);
+  const [type,] = useDnD();
+
+  const onDragOver = useCallback((event: DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+ 
+  const onDrop = useCallback(
+    (event: DragEvent) => {
+      event.preventDefault();
+ 
+      if (!type) {
+        return;
+      }
+ 
+      // project was renamed to screenToFlowPosition
+      // and you don't need to subtract the reactFlowBounds.left/top anymore
+      // details: https://reactflow.dev/whats-new/2023-11-10
+      const position = reactFlow.screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+      const newNode = {
+        id: crypto.randomUUID(),
+        type,
+        position,
+        data: { text: `New ${type}`, type: 'whatsapp', to: [] },
+      };
+ 
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [reactFlow, type],
+  );
+
  
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      nodeTypes={NODE_TYPES}
-      onConnect={onConnect}
-      fitView
-    />
+    <div ref={reactFlowWrapper} className="size-full">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodeTypes={NODE_TYPES}
+        onConnect={onConnect}
+        fitView
+        onDragOver={onDragOver}
+        onDrop={onDrop}
+      />
+    </div>
   );
 }
