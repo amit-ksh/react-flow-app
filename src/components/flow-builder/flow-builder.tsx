@@ -1,12 +1,14 @@
 import { useState, useCallback, useRef, type DragEvent } from 'react';
 import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, type NodeChange, type EdgeChange, type Connection, useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { NODE_TYPES } from './node';
+import { NODE_COMPONENTS } from './node';
 import { useDnD } from '@/contexts/dnd-context';
+import type { EdgeData, FlowBuilderEdge, FlowBuilderNode, TextNodeData } from '@/types/flow-builder';
+import { NodeType } from '@/lib/flow-builder';
  
 const initialNodes = [
-  { id: 'n1', type: "textNode", position: { x: 0, y: 0 }, data: { text: 'Node 1', type: 'whatsapp', to: ['n2'] } },
-  { id: 'n2', type: "textNode", position: { x: 400, y: 0 }, data: { text: 'Node 2', type: 'whatsapp', to: [] } },
+  { id: 'n1', type: NodeType.Text, position: { x: 0, y: 0 }, data: { id: 'n1', text: 'Node 1', type: 'whatsapp', to: ['n2'] } },
+  { id: 'n2', type: NodeType.Text, position: { x: 400, y: 0 }, data: { id: 'n2', text: 'Node 2', type: 'whatsapp', to: [] } },
 ];
 const initialEdges = initialNodes.flatMap((node) =>
   node.data.to.map((targetId) => ({
@@ -16,8 +18,8 @@ const initialEdges = initialNodes.flatMap((node) =>
  
 export  function FlowBuilder() {
   const reactFlow = useReactFlow();
-  const [nodes, setNodes] = useState<typeof initialNodes>(initialNodes);
-  const [edges, setEdges] = useState<typeof initialEdges>(initialEdges);
+  const [nodes, setNodes] = useState<FlowBuilderNode<TextNodeData>[]>(initialNodes);
+  const [edges, setEdges] = useState<FlowBuilderEdge<EdgeData>[]>(initialEdges);
 
   const onNodesChange = useCallback(
     (changes: NodeChange<typeof initialNodes[number]>[]) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
@@ -32,7 +34,7 @@ export  function FlowBuilder() {
     [],
   );
    const reactFlowWrapper = useRef(null);
-  const [type,] = useDnD();
+  const { type } = useDnD();
 
   const onDragOver = useCallback((event: DragEvent) => {
     event.preventDefault();
@@ -51,14 +53,15 @@ export  function FlowBuilder() {
         x: event.clientX,
         y: event.clientY,
       });
-      const newNode = {
-        id: crypto.randomUUID(),
+      const id = crypto.randomUUID()
+      const newNode: FlowBuilderNode<TextNodeData> = {
+        id,
         type,
         position,
-        data: { text: `New ${type}`, type: 'whatsapp', to: [] },
-      };
+        data: { id, text: `New ${type}`, type: 'whatsapp', to: [] },
+      } ;
  
-      setNodes((nds) => nds.concat(newNode));
+      setNodes((nds) => [...nds, newNode]);
     },
     [reactFlow, type],
   );
@@ -71,7 +74,7 @@ export  function FlowBuilder() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        nodeTypes={NODE_TYPES}
+        nodeTypes={NODE_COMPONENTS}
         onConnect={onConnect}
         fitView
         onDragOver={onDragOver}

@@ -3,14 +3,23 @@ import NodeEditor from "@/components/flow-builder/node-editor";
 import NodePanel from "@/components/flow-builder/node-panel";
 import { Button } from "@/components/ui/button";
 import { useFlowBuilder } from "@/contexts/flow-builder-context";
+import { useReactFlow } from "@xyflow/react";
 
 export default function FlowBuilderWrapper() {
   const { editNodeId } = useFlowBuilder();
+  const { getEdges, getNodes } = useReactFlow()
+  
+  const handleSaveChanges = () => {
+    const nodes = getNodes();
+    const edges = getEdges();
+    console.log('Saving nodes:', nodes);
+    console.log('Saving edges:', edges);
+  }
 
   return (
       <div className="h-svh max-w-screen overflow-hidden">
         <header className="flex items-center justify-end bg-gray-50 border-b py-2 px-4">
-          <Button>
+          <Button onClick={handleSaveChanges}>
             Save Changes
           </Button>
         </header>
@@ -34,4 +43,3 @@ export default function FlowBuilderWrapper() {
       </div>
   );
 }
-

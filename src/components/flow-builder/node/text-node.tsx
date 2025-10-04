@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/react-flow/base-node";
 import { Position, useNodeId, useReactFlow, type Node, type NodeProps } from "@xyflow/react";
 import { MessageCircleIcon, TrashIcon } from "lucide-react";
-import { BaseHandle } from "@/components/base-handle";
+import { BaseHandle } from "@/components/ui/react-flow/base-handle";
 import { useFlowBuilder } from "@/contexts/flow-builder-context";
+import type { TextNodeData } from "@/types/flow-builder";
 
-export const TextNode = memo((props: NodeProps<Node<{ text: string; type: string; to: string[] }>>) => {
+export const TextNode = memo((props: NodeProps<Node<TextNodeData>>) => {
   const id = useNodeId();
   const { setNodes } = useReactFlow();
 

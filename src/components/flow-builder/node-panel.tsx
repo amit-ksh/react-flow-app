@@ -1,4 +1,5 @@
 import { useDnD } from "@/contexts/dnd-context";
+import type { NodeType } from "@/lib/flow-builder";
 import { CommandIcon, MessageCircleMoreIcon } from "lucide-react";
 import type { DragEvent } from "react";
 
@@ -7,9 +8,9 @@ const NodeTypes = {
 } as const;
 
 export default function NodePanel() {
-  const [, setType] = useDnD();
+  const { setType } = useDnD();
 
-  const onDragStart = (event: DragEvent<HTMLButtonElement>, nodeType: string) => {
+  const onDragStart = (event: DragEvent<HTMLButtonElement>, nodeType: NodeType) => {
     setType(nodeType);
     event.dataTransfer.effectAllowed = "move";
   };

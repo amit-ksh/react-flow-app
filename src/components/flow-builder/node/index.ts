@@ -1,5 +1,5 @@
 import { TextNode } from './text-node';
 
-export const NODE_TYPES = {
+export const NODE_COMPONENTS = {
   textNode: TextNode,
 } as const;
