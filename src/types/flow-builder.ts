@@ -4,7 +4,7 @@ export type TextNodeData = {
     id: string;
     text: string;
     type: string;
-    to: string[];
+    from: string[];
 }
 
 export type EdgeData = {

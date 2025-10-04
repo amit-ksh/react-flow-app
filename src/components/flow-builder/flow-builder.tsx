@@ -22,8 +22,8 @@ import { useLocalStorageQuery } from "@/hooks/use-local-storage";
 import { QUERY_KEYS } from "@/lib/query-keys";
 
 const initialNodes = [
-  { id: "n1", text: "Node 1", type: "whatsapp", to: ["n2"] },
-  { id: "n2", text: "Node 2", type: "whatsapp", to: [] },
+  { id: "n1", text: "Node 1", type: "whatsapp", from: [] },
+  { id: "n2", text: "Node 2", type: "whatsapp", from: ["n1"] },
 ];
 
 export function FlowBuilder() {
@@ -42,11 +42,11 @@ export function FlowBuilder() {
     })) ?? [];
   const initialEdges: FlowBuilderEdge<EdgeData>[] =
     initialReactFlowNodes.flatMap((node) =>
-      node.data.to.map((targetId) => ({
-        id: `e${node.id}-${targetId}`,
-        source: node.id,
-        target: targetId,
-        data: { from: node.id, to: targetId },
+      node.data.from.map((sourceId) => ({
+        id: `e${sourceId}-${node.id}`,
+        source: sourceId,
+        target: node.id,
+        data: { from: sourceId, to: node.id },
       }))
     );
 
@@ -84,14 +84,14 @@ export function FlowBuilder() {
 
       const sourceNodeId = params.source;
       const targetNodeId = params.target;
-      console.log("Connecting", sourceNodeId, "to", targetNodeId);
+      console.log("Connecting", sourceNodeId, "->", targetNodeId);
       setNodes((nodesSnapshot) =>
         nodesSnapshot.map((node) => {
-          if (node.id === sourceNodeId && targetNodeId) {
-            const to = Array.from(
-              new Set([...(node.data.to || []), targetNodeId])
+          if (node.id === targetNodeId && sourceNodeId) {
+            const from = Array.from(
+              new Set([...(node.data.from || []), sourceNodeId])
             );
-            return { ...node, data: { ...node.data, to } };
+            return { ...node, data: { ...node.data, from } };
           }
           return node;
         })
@@ -126,7 +126,7 @@ export function FlowBuilder() {
         id,
         type,
         position,
-        data: { id, text: `Click to edit text`, type: "whatsapp", to: [] },
+        data: { id, text: `Click to edit text`, type: "whatsapp", from: [] },
       };
 
       setNodes((nds) => [...nds, newNode]);
