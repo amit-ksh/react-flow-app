@@ -5,32 +5,46 @@ import { NODE_COMPONENTS } from './node';
 import { useDnD } from '@/contexts/dnd-context';
 import type { EdgeData, FlowBuilderEdge, FlowBuilderNode, TextNodeData } from '@/types/flow-builder';
 import { NodeType } from '@/lib/flow-builder';
+import { useLocalStorageQuery } from '@/hooks/use-local-storage';
+import { QUERY_KEYS } from '@/lib/query-keys';
  
 const initialNodes = [
-  { id: 'n1', type: NodeType.Text, position: { x: 0, y: 0 }, data: { id: 'n1', text: 'Node 1', type: 'whatsapp', to: ['n2'] } },
-  { id: 'n2', type: NodeType.Text, position: { x: 400, y: 0 }, data: { id: 'n2', text: 'Node 2', type: 'whatsapp', to: [] } },
+  { id: 'n1', text: 'Node 1', type: 'whatsapp', to: ['n2'] },
+  { id: 'n2', text: 'Node 2', type: 'whatsapp', to: [] },
 ];
-const initialEdges = initialNodes.flatMap((node) =>
-  node.data.to.map((targetId) => ({
-    id: `e${node.id}-${targetId}`, source: node.id, target: targetId, data: { from: node.id, to: targetId },
-  }))
-);
- 
+
+
 export  function FlowBuilder() {
   const reactFlow = useReactFlow();
-  const [nodes, setNodes] = useState<FlowBuilderNode<TextNodeData>[]>(initialNodes);
+  const { data: nodeData } = useLocalStorageQuery<TextNodeData[]>(QUERY_KEYS.NODES, initialNodes);
+
+  const initialReactFlowNodes: FlowBuilderNode<TextNodeData>[] = nodeData?.map((data) => ({
+        id: data.id,
+        type: NodeType.Text,
+        position: { x: Math.random() * 400, y: Math.random() * 400 },
+        data,
+      })) ?? [];
+  const initialEdges: FlowBuilderEdge<EdgeData>[] = initialReactFlowNodes.flatMap((node) =>
+    node.data.to.map((targetId) => ({
+      id: `e${node.id}-${targetId}`, source: node.id, target: targetId, data: { from: node.id, to: targetId },
+    }))
+  );
+
+  const [nodes, setNodes] = useState<FlowBuilderNode<TextNodeData>[]>(initialReactFlowNodes);
   const [edges, setEdges] = useState<FlowBuilderEdge<EdgeData>[]>(initialEdges);
 
   const onNodesChange = useCallback(
-    (changes: NodeChange<typeof initialNodes[number]>[]) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
+    (changes: NodeChange<typeof nodes[number]>[]) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
     [],
   );
   const onEdgesChange = useCallback(
-    (changes: EdgeChange<typeof initialEdges[number]>[]) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+    (changes: EdgeChange<typeof edges[number]>[]) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
     [],
   );
   const onConnect = useCallback(
-    (params: Connection) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+    (params: Connection) => {
+      setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot))
+    },
     [],
   );
    const reactFlowWrapper = useRef(null);
@@ -58,7 +72,7 @@ export  function FlowBuilder() {
         id,
         type,
         position,
-        data: { id, text: `New ${type}`, type: 'whatsapp', to: [] },
+        data: { id, text: `Click to edit text`, type: 'whatsapp', to: [] },
       } ;
  
       setNodes((nds) => [...nds, newNode]);
