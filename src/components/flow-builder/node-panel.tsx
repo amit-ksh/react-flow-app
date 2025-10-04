@@ -3,7 +3,7 @@ import { CommandIcon, MessageCircleMoreIcon } from "lucide-react";
 import type { DragEvent } from "react";
 
 const NodeTypes = {
-  message: { name: "Message", icon: MessageCircleMoreIcon },
+  message: { name: "Message", icon: MessageCircleMoreIcon, nodeType: "textNode" },
 } as const;
 
 export default function NodePanel() {
@@ -24,12 +24,12 @@ export default function NodePanel() {
       </div>
       <ul className="ml-auto grid grid-cols-2 gap-4">
         {/* BUTTONS */}
-        {Object.entries(NodeTypes).map(([key, { name, icon: Icon }]) => (
+        {Object.entries(NodeTypes).map(([key, { name, icon: Icon, nodeType }]) => (
           <li key={key}>
             <button
-              onDragStart={(event) => onDragStart(event, "textNode")}
+              onDragStart={(event) => onDragStart(event, nodeType)}
               draggable
-              className="px-4 py-3 rounded-md font-semibold cursor-pointer hover:bg-indigo-100 flex items-center justify-center gap-2 w-full border border-indigo-500 text-indigo-500"
+              className="px-4 py-3 rounded-md font-semibold cursor-grab hover:bg-indigo-100 flex items-center justify-center gap-2 w-full border border-indigo-500 text-indigo-500"
             >
               <Icon className="size-4" />
               {name}

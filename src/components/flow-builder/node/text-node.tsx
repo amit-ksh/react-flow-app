@@ -10,10 +10,13 @@ import {
 import { Position, useNodeId, useReactFlow, type Node, type NodeProps } from "@xyflow/react";
 import { MessageCircleIcon, TrashIcon } from "lucide-react";
 import { BaseHandle } from "@/components/base-handle";
+import { useFlowBuilder } from "@/contexts/flow-builder-context";
 
 export const TextNode = memo((props: NodeProps<Node<{ text: string; type: string; to: string[] }>>) => {
   const id = useNodeId();
   const { setNodes } = useReactFlow();
+
+  const { setEditNodeId } = useFlowBuilder();
 
   const handleDelete = useCallback(() => {
     setNodes((prevNodes) => prevNodes.filter((node) => node.id !== id));
@@ -39,7 +42,7 @@ export const TextNode = memo((props: NodeProps<Node<{ text: string; type: string
       </BaseNodeHeader>
       <BaseNodeContent className="cursor-pointer">
         <BaseHandle id={`handle-${id}-target`} type="target" position={Position.Left} />
-        <p>{props.data.text}</p>
+        <button onClick={() => setEditNodeId(id)} className="cursor-pointer">{props.data.text}</button>
         <BaseHandle id={`handle-${id}-source`} type="source" position={Position.Right} />
       </BaseNodeContent>
     </BaseNode>
