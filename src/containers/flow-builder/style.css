@@ -1,0 +1,41 @@
+.react-flow {
+    --xy-edge-stroke-default: var(--border); 
+    --xy-edge-stroke-width-default: 1;
+    --xy-edge-stroke-selected-default: var(--primary);
+    --xy-connectionline-stroke-default: rgba(15, 23, 42, 0.12);
+    --xy-connectionline-stroke-width-default: 1.5;
+    --xy-attribution-background-color-default: rgba(255, 255, 255, 0.7);
+    --xy-minimap-background-color-default: var(--color-popover);
+    --xy-background-pattern-dots-color-default: rgba(15, 23, 42, 0.06);
+    --xy-background-pattern-line-color-default: var(--border);
+    --xy-background-pattern-cross-color-default: rgba(15, 23, 42, 0.04);
+    --xy-node-color-default: var(--color-card-foreground);
+    --xy-node-border-default: 1px solid var(--border);
+    --xy-node-background-color-default: var(--color-card);
+    --xy-node-group-background-color-default: rgba(99, 102, 241, 0.06); 
+    --xy-node-boxshadow-hover-default: 0 6px 18px rgba(15, 23, 42, 0.06);
+    --xy-node-boxshadow-selected-default: 0 0 0 3px var(--ring);
+    --xy-handle-background-color-default: var(--muted);
+    --xy-handle-border-color-default: var(--primary-foreground);
+    --xy-handle-size-default: 16px; 
+    --xy-selection-background-color-default: rgba(79, 70, 229, 0.08);
+    --xy-selection-border-default: 1px dotted rgba(79, 70, 229, 0.8);
+    --xy-controls-button-background-color-default: var(--color-popover);
+    --xy-controls-button-background-color-hover-default: var(--muted);
+    --xy-controls-button-color-default: var(--color-popover-foreground);
+    --xy-controls-button-color-hover-default: var(--color-popover-foreground);
+    --xy-controls-button-border-color-default: var(--border);
+    --xy-controls-box-shadow-default: 0 6px 16px rgba(15, 23, 42, 0.06);
+    --xy-resize-background-color-default: var(--primary);
+}
+
+.react-flow .react-flow__handle {
+    width: var(--xy-handle-size-default);
+    height: var(--xy-handle-size-default);
+    border-radius: 50%;
+    background: var(--xy-handle-background-color-default);
+    border: 2px solid var(--xy-handle-border-color-default);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+    transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+

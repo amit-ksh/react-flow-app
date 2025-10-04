@@ -1,3 +1,6 @@
+import "@xyflow/react/dist/style.css";
+import './style.css'
+
 import { FlowBuilder } from "@/components/flow-builder";
 import NodeEditor from "@/components/flow-builder/node-editor";
 import NodePanel from "@/components/flow-builder/node-panel";

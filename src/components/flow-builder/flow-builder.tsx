@@ -9,7 +9,6 @@ import {
   type Connection,
   useReactFlow,
 } from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
 import { NODE_COMPONENTS } from "./node";
 import { useDnD } from "@/contexts/dnd-context";
 import type {
