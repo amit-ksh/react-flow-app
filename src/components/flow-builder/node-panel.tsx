@@ -17,11 +17,16 @@ export default function NodePanel() {
 
   return (
     <div>
-      <div className="mb-4 flex items-center gap-2">
-        <div className="bg-indigo-500 rounded-md p-1">
-          <CommandIcon className="size-4 text-white" />
+      <div className="mb-4 flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <div className="bg-indigo-500 rounded-md p-1">
+            <CommandIcon className="size-4 text-white" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold">Node Panel</h2>
+            <p className="text-xs text-slate-500">Drag and drop a node into the canvas to add it.</p>
+          </div>
         </div>
-        <h2 className="text-lg font-semibold">Node Panel</h2>
       </div>
       <ul className="ml-auto grid grid-cols-2 gap-4">
         {/* BUTTONS */}
