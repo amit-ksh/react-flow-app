@@ -1,6 +1,7 @@
 import { FlowBuilder } from "./components/flow-builder";
 import NodeEditor from "./components/flow-builder/node-editor";
 import NodePanel from "./components/flow-builder/node-panel";
+import { Button } from "./components/ui/button";
 import { useFlowBuilder } from "./contexts/flow-builder-context";
 
 function App() {
@@ -8,10 +9,10 @@ function App() {
 
   return (
       <div className="h-svh max-w-screen overflow-hidden">
-        <header className="flex items-center justify-end bg-gray-50 border-b">
-          <button className="m-4 rounded bg-indigo-500 px-4 py-2 font-semibold text-white hover:bg-indigo-600 flex items-center gap-2">
+        <header className="flex items-center justify-end bg-gray-50 border-b py-2 px-4">
+          <Button>
             Save Changes
-          </button>
+          </Button>
         </header>
 
         <div className="grid grid-cols-[1fr_350px] h-full">
